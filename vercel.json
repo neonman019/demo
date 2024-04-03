@@ -1,14 +1,14 @@
- {
+{
   "functions": {
     "api/*.php": {
       "runtime": "vercel-php@0.7.0"
     }
   },
-  "rewrites": 
+  "rewrites": [
     {
       "source": "/:id.mpd",
       "destination": "/api/index.php?id=:id"
     }
-}{
+  ],
   "cleanUrls": true
 }
