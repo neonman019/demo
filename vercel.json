@@ -1,15 +1,14 @@
 {
-   "version": 2,
-   "builds": [
-      {
-         "src": "./index.php",
-         "use": "@vercel/php"
-      }
-   ],
-   "routes": [
-      {
-         "src": "/(.*)",
-         "dest": "/"
-      }
-   ]
+  "functions": {
+    "api/*.php": {
+      "runtime": "vercel-php@0.7.0"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/:id.mpd",
+      "destination": "/api/index.php?id=:id"
+    }
+  ],
+  "cleanUrls": true
 }
