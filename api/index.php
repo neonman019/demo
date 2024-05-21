@@ -1,38 +1,121 @@
 <?php
-header("Content-Type: application/vnd.apple.mpegurl");
 
-$d0 = isset($_GET["id"]) ? $_GET["id"] : "";
-$j1 = isset($_GET["au"]) ? $_GET["au"] : "";
+$id = @$_GET['id'];
+$currentTimestamp = time();
+$portal = "jiotv.be";
+$mac = "00:1A:79:EC:39:79";
+$deviceid = "85B93F40902BE7F587CC21E826FC450907F2B1AC18D94C6E145C12577C30E002";
+$deviceid2 = "85B93F40902BE7F587CC21E826FC450907F2B1AC18D94C6E145C12577C30E002";
+$serial = "4EF75D35A9F1D";
+$sig = "";
 
-$n2 = "http://dhoom4u.me/stalker_portal/server/load.php?type=itv&action=create_link&cmd=ffrt%20http://localhost/ch/{$d0}&series=&forced_storage=0&disable_ad=0&download=0&force_ch_link_check=0&JsHttpRequest=1-xml";
+$n1 = "http://jiotv.be/stalker_portal/server/load.php?type=stb&action=handshake&prehash=false&JsHttpRequest=1-xml";
 
-$t4 = array(
-    "Cookie: mac=00:1a:79:a7:e4:26",
-    "Authorization: Bearer DCFE189072DA725604FCCB5AFCB94428",
-    "Referer: http://dhoom4u.me/stalker_portal/c/",
+$h1 = [
+    "Cookie: mac=00:1A:79:EC:39:79; stb_lang=en; timezone=GMT",
+    "Referer: http://jiotv.be/stalker_portal/c/",
     "User-Agent: Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG200 stbapp ver: 2 rev: 250 Safari/533.3",
     "X-User-Agent: Model: MAG250; Link:",
-    "Referer: http://dhoom4u.me/stalker_portal/c/"
-);
+];
 
-$n3 = curl_init();
-curl_setopt($n3, CURLOPT_URL, $n2);
-curl_setopt($n3, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($n3, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($n3, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($n3, CURLOPT_HTTPHEADER, $t4);
-curl_setopt($n3, CURLOPT_USERAGENT, 'Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG200 stbapp ver: 2 rev: 250 Safari/533.3');
-curl_setopt($n3, CURLOPT_REFERER, 'http://dhoom4u.me/stalker_portal/c/');
+$c1_curl = curl_init();
+curl_setopt($c1_curl, CURLOPT_URL, $n1);
+curl_setopt($c1_curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($c1_curl, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($c1_curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($c1_curl, CURLOPT_HTTPHEADER, $h1);
+curl_setopt($c1_curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG200 stbapp ver: 2 rev: 250 Safari/533.3');
+$res1 = curl_exec($c1_curl);
+curl_close($c1_curl);
 
-$h5 = curl_exec($n3);
+$response = json_decode($res1, true);
+$token = $response['js']['random'];
+$real = $response['js']['token'];
 
-curl_close($n3);
+$h2 = [
+    "Cookie: mac=00:1A:79:EC:39:79; stb_lang=en; timezone=GMT",
+    "Authorization: Bearer EF52A7648F062ED98101FBF0B4D70B76",
+    "Referer: http://jiotv.be/stalker_portal/c/",
+    "User-Agent: Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG200 stbapp ver: 2 rev: 250 Safari/533.3",
+    "X-User-Agent: Model: MAG250; Link:",
+];
 
-$i6 = json_decode($h5, true);
+$n2 = "http://jiotv.be/stalker_portal/server/load.php?type=stb&action=get_profile&hd=1&ver=ImageDescription: 0.2.18-r14-pub-250; ImageDate: Fri Jan 15 15:20:44 EET 2016; PORTAL version: 5.5.0; API Version: JS API version: 328; STB API version: 134; Player Engine version: 0x566&num_banks=2&sn=$serial&stb_type=MAG254&image_version=218&video_out=hdmi&device_id=$deviceid&device_id2=$deviceid2&signature=$sig&auth_second_step=1&hw_version=1.7-BD-00&not_valid_token=0&client_type=STB&hw_version_2=7c431b0aec69b2f0194c0680c32fe4e3&timestamp=$currentTimestamp&api_signature=263&metrics={\"mac\":\"$mac\",\"sn\":\"$serial\",\"model\":\"MAG254\",\"type\":\"STB\",\"uid\":\"$deviceid\",\"random\":\"$token\"}&JsHttpRequest=1-xml";
+
+$c2_curl = curl_init();
+curl_setopt($c2_curl, CURLOPT_URL, $n2);
+curl_setopt($c2_curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($c2_curl, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($c2_curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($c2_curl, CURLOPT_HTTPHEADER, $h2);
+curl_setopt($c2_curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG200 stbapp ver: 2 rev: 250 Safari/533.3');
+$res2 = curl_exec($c2_curl);
+curl_close($c2_curl);
+
+$n3 = "http://jiotv.be/stalker_portal/server/load.php?type=itv&action=create_link&cmd=ffrt%http://localhost/ch/$id&JsHttpRequest=1-xml";
+
+$c3_curl = curl_init();
+curl_setopt($c3_curl, CURLOPT_URL, $n3);
+curl_setopt($c3_curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($c3_curl, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($c3_curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($c3_curl, CURLOPT_HTTPHEADER, $h2);
+curl_setopt($c3_curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG200 stbapp ver: 2 rev: 250 Safari/533.3');
+$res3 = curl_exec($c3_curl);
+curl_close($c3_curl);
+
+$i6 = json_decode($res3, true);
 
 if (isset($i6["js"]["cmd"])) {
+
     $d7 = $i6["js"]["cmd"];
-    header("Location: " . $d7);
-    die;
+    $flink = str_replace("index.m3u8", "tracks-v1a1/mono.m3u8", $d7);
+    $parsedUrl = parse_url($flink);
+    $baseUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . ':' . $parsedUrl['port'] . $parsedUrl['path'];
+    $encodeurl = str_replace("mono.m3u8", "", $baseUrl);
+
+    function fetchData($flink, $encodeurl)
+    {
+
+        $n3 = curl_init();
+        curl_setopt($n3, CURLOPT_URL, $flink);
+        curl_setopt($n3, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($n3, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($n3, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($n3, CURLOPT_USERAGENT, 'Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG200 stbapp ver: 2 rev: 250 Safari/533.3');
+        curl_setopt($n3, CURLOPT_FOLLOWLOCATION, true);
+        $html = curl_exec($n3);
+        $flink = curl_getinfo($n3, CURLINFO_EFFECTIVE_URL);
+        curl_close($n3);
+
+        $subject = $html;
+        $search = "/hlsr/";
+        preg_match('/(http.*80)/', $flink, $xn);
+        $x = $xn=0;
+
+        // Add the main URL to the paths in the M3U playlist
+        $subject = preg_replace('/(\d{4}\/\d{2}\/\d{2}\/\d{2}\/\d{2}\/\d{2}-\d+\.ts)/', "ts.php?ts=$encodeurl$1", $subject);
+        $trimmed = str_replace($search, "ts.php?ts=$x/hlsr/", $subject);
+        return $trimmed;
+    }
+
+    function sendStreamData($data)
+    {
+        $chunkSize = 1024; // Adjust chunk size as needed
+        $dataLength = strlen($data);
+        ("Content-Length: " . $dataLength); // Set content length
+        echo $data;
+        exit(); // Exit after sending one chunk
+    }
+
+    sendStreamData(fetchData($flink, $encodeurl));
+
+    // Adjust delay between sending data (in seconds)
+    $delaySeconds = 25; // Adjust this value as needed
+
+    // Send stream data continuously with adjusted delay
+    while (true) {
+        sleep($delaySeconds);
+        sendStreamData(fetchData($flink, $encodeurl)); // Call fetchData again to get updated stream data
+    }
 }
-?>
